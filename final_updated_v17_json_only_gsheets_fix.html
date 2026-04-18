@@ -1,0 +1,2249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LGU Iloilo City Vehicle Scheduling System</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #ffffff;
+      --text: #1e293b;
+      --muted: #64748b;
+      --primary: #1d4ed8;
+      --primary-dark: #1e3a8a;
+      --danger: #dc2626;
+      --warning: #d97706;
+      --low: #6b7280;
+      --success: #16a34a;
+      --border: #dbe2ea;
+      --shadow: 0 10px 25px rgba(15, 23, 42, 0.18);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(180deg, #0f172a 0%, #1e3a8a 100%);
+      color: var(--text);
+    }
+
+    .app-shell {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .hero {
+      position: relative;
+      background: linear-gradient(135deg, #0f172a, #1d4ed8, #1e3a8a);
+      color: #fff;
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: 0 16px 36px rgba(15, 23, 42, 0.35);
+      margin-bottom: 20px;
+    }
+
+    .hero h1 {
+      margin: 0 0 8px;
+      font-size: 32px;
+    }
+
+    .hero p {
+      margin: 0;
+      opacity: 0.95;
+      line-height: 1.5;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .stat {
+      background: rgba(255,255,255,0.14);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 16px;
+      padding: 14px;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      opacity: 0.88;
+    }
+
+    .stat-value {
+      font-size: 28px;
+      font-weight: bold;
+      margin-top: 6px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 18px;
+    }
+
+    .sidebar,
+    .panel,
+    .card {
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .panel,
+    .card {
+      background: rgba(255,255,255,0.92);
+      border: 1px solid rgba(255,255,255,0.55);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .sidebar {
+      padding: 16px;
+      position: sticky;
+      top: 20px;
+      height: fit-content;
+      background: linear-gradient(180deg, #0f172a, #172554);
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.28);
+    }
+
+    .nav-title {
+      font-size: 13px;
+      color: rgba(255,255,255,0.7);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 12px;
+    }
+
+    .nav-btn {
+      width: 100%;
+      border: 0;
+      background: rgba(255,255,255,0.08);
+      color: #e2e8f0;
+      padding: 12px 14px;
+      text-align: left;
+      border-radius: 14px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: 0.2s ease;
+    }
+
+    .nav-btn.active,
+    .nav-btn:hover {
+      background: #2563eb;
+      color: #fff;
+    }
+
+    .panel {
+      padding: 18px;
+    }
+
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .section-header h2 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    .section-header p {
+      margin: 4px 0 0;
+      color: var(--muted);
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .card {
+      padding: 18px;
+    }
+
+    .card h3 {
+      margin-top: 0;
+      margin-bottom: 14px;
+      font-size: 18px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .form-grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .field label {
+      font-size: 13px;
+      font-weight: 700;
+      color: #334155;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 11px 12px;
+      border-radius: 12px;
+      border: 1px solid #cbd5e1;
+      background: #fff;
+      color: var(--text);
+      font-size: 14px;
+      outline: none;
+    }
+
+    textarea { resize: vertical; min-height: 88px; }
+    input:focus, select:focus, textarea:focus { border-color: var(--primary); }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 12px;
+      padding: 11px 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover { background: var(--primary-dark); }
+    .btn-secondary { background: #e2e8f0; color: #0f172a; }
+    .btn-danger { background: #fee2e2; color: #991b1b; }
+    .btn-success { background: #dcfce7; color: #166534; }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .priority-high { background: #fee2e2; color: #991b1b; }
+    .priority-medium { background: #fef3c7; color: #92400e; }
+    .priority-low { background: #e5e7eb; color: #374151; }
+    .status-pending { background: #e0f2fe; color: #075985; }
+    .status-approved { background: #dcfce7; color: #166534; }
+    .status-ongoing { background: #fef3c7; color: #92400e; }
+    .status-completed { background: #ede9fe; color: #5b21b6; }
+    .status-rejected { background: #fee2e2; color: #991b1b; }
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: #fff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 900px;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #edf2f7;
+      vertical-align: top;
+      font-size: 14px;
+    }
+
+    th {
+      background: #f8fafc;
+      color: #334155;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      position: sticky;
+      top: 0;
+    }
+
+    tr:hover td { background: #f8fbff; }
+
+    .split {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 16px;
+    }
+
+    .alert {
+      border-radius: 14px;
+      padding: 12px 14px;
+      margin-bottom: 14px;
+      font-size: 14px;
+      border: 1px solid transparent;
+      display: none;
+    }
+
+    .alert.show { display: block; }
+    .alert-info { background: #eff6ff; color: #1d4ed8; border-color: #bfdbfe; }
+    .alert-danger { background: #fef2f2; color: #b91c1c; border-color: #fecaca; }
+    .alert-success { background: #ecfdf5; color: #047857; border-color: #a7f3d0; }
+
+    .mini-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .mini-item {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px;
+      background: #fff;
+    }
+
+    .mini-item strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .muted { color: var(--muted); }
+
+    .empty-state {
+      text-align: center;
+      color: var(--muted);
+      padding: 24px;
+      border: 1px dashed #cbd5e1;
+      border-radius: 16px;
+      background: #fcfdff;
+    }
+
+    .inline-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .badge-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+      background: currentColor;
+    }
+
+    .footer-note {
+      margin-top: 20px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .excel-wrap {
+      border: 1px solid #b8c2cc;
+      border-radius: 14px;
+      overflow: hidden;
+      background: #ffffff;
+    }
+
+    .excel-table {
+      min-width: 1100px;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    .excel-table th,
+    .excel-table td {
+      border: 1px solid #d1d5db;
+      padding: 10px 12px;
+      white-space: nowrap;
+    }
+
+    .excel-table th {
+      background: #e5e7eb;
+      color: #111827;
+      font-weight: 700;
+    }
+
+    .excel-table tr:nth-child(even) td {
+      background: #f9fafb;
+    }
+
+    .excel-toolbar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    
+
+    .role-switch {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 0;
+      justify-content: flex-end;
+      align-self: flex-start;
+      position: absolute;
+      top: 20px;
+      right: 24px;
+      z-index: 2;
+    }
+
+    .role-btn {
+      border: 1px solid rgba(255,255,255,0.22);
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-weight: 700;
+      font-size: 12px;
+      cursor: pointer;
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+    }
+
+    .role-btn.active {
+      background: #dbeafe;
+      color: #1e3a8a;
+    }
+
+    .notify-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 22px;
+      height: 22px;
+      padding: 0 7px;
+      border-radius: 999px;
+      background: var(--danger);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      margin-left: 8px;
+    }
+
+    .role-note {
+      color: rgba(255,255,255,0.92);
+      margin-top: 8px;
+      font-size: 12px;
+      text-align: right;
+      max-width: 360px;
+      margin-left: auto;
+    }
+
+    .excel-toolbar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .admin-only.hidden-by-role,
+    .secondary-only.hidden-by-role {
+      display: none !important;
+    }
+
+    .notification-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: flex-start;
+    }
+
+    .notification-item small {
+      color: var(--muted);
+      display: block;
+      margin-top: 4px;
+    }
+
+
+    .card {
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 30px rgba(15, 23, 42, 0.18);
+    }
+
+    @media (max-width: 1100px) {
+      .layout,
+      .hero-grid,
+      .split,
+      .card-grid,
+      .form-grid,
+      .form-grid-3,
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .role-switch {
+        position: static;
+        justify-content: flex-start;
+        margin-top: 14px;
+      }
+
+      .sidebar {
+        position: static;
+      }
+    }
+
+
+    @media print {
+      body {
+        background: #ffffff !important;
+      }
+
+      .hero,
+      .sidebar,
+      .role-switch,
+      .footer-note,
+      #exportExcelBtn,
+      #printReportBtn,
+      .excel-toolbar,
+      .btn,
+      .inline-actions,
+      .nav-btn {
+        display: none !important;
+      }
+
+      .layout {
+        display: block !important;
+      }
+
+      .panel,
+      .card {
+        box-shadow: none !important;
+        border: 1px solid #d1d5db !important;
+        background: #ffffff !important;
+      }
+
+      #reports {
+        display: block !important;
+      }
+
+      .tab-pane {
+        display: none !important;
+      }
+
+      #reports.tab-pane {
+        display: block !important;
+      }
+
+      table {
+        min-width: 100% !important;
+      }
+    }
+
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <section class="hero">
+      <div class="hero-grid">
+        <div>
+          <h1>Vehicle Scheduling System</h1>
+          <p>LGU - Iloilo City Ready | Role-based workflow: Secondary Requester → Admin Approval → Scheduling → Dispatch → Reporting</p>
+          <div class="stats">
+            <div class="stat">
+              <div class="stat-label">Pending Requests</div>
+              <div class="stat-value" id="statPending">0</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">Approved Trips</div>
+              <div class="stat-value" id="statApproved">0</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">Ongoing Trips</div>
+              <div class="stat-value" id="statOngoing">0</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">Completed Trips</div>
+              <div class="stat-value" id="statCompleted">0</div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="role-switch">
+            <button class="role-btn active" data-role="secondary">Secondary / Requestor View</button>
+            <button class="role-btn" data-role="admin">Admin Approval View</button>
+          </div>
+          <div class="role-note" id="roleNote"></div>
+        </div>
+        <div></div>
+      </div>
+    </section>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="nav-title">System Menu</div>
+        <button class="nav-btn" data-tab="requests" data-role-scope="all">Request Form</button>
+        <button class="nav-btn" data-tab="approvals" data-role-scope="admin">Approval Queue <span class="notify-badge" id="sidebarApprovalBadge">0</span></button>
+        <button class="nav-btn active" data-tab="schedule" data-role-scope="all">Live Schedule Board View</button>
+        <button class="nav-btn" data-tab="dispatch" data-role-scope="admin">Dispatch Logbook</button>
+        <button class="nav-btn" data-tab="settings" data-role-scope="admin">Vehicles & Drivers</button>
+        <button class="nav-btn" data-tab="reports" data-role-scope="admin">Reports</button>
+      </aside>
+
+      <main class="panel">
+        <section id="requests" class="tab-pane">
+          <div class="section-header">
+            <div>
+              <h2>Secondary Request Portal</h2>
+              <p>Secondary users submit vehicle requests here and wait for admin approval before scheduling.</p>
+            </div>
+            <div class="inline-actions admin-only hidden-by-role">
+              <button class="btn btn-secondary" onclick="switchRole('admin'); switchTab('approvals');">Go to Approval Queue</button>
+            </div>
+          </div>
+
+          <div id="requestAlert" class="alert alert-info"></div>
+
+          <div>
+            <div class="card">
+              <h3>Create New Request</h3>
+              <form id="requestForm">
+                <div class="form-grid">
+                  <div class="field">
+                    <label>Office / Department</label>
+                    <input type="text" id="office" required />
+                  </div>
+                  <div class="field">
+                    <label>Requesting Officer</label>
+                    <input type="text" id="requestingOfficer" required />
+                  </div>
+                </div>
+
+                <div class="field">
+                  <label>Purpose of Trip</label>
+                  <textarea id="purpose" required></textarea>
+                </div>
+
+                <div class="form-grid-3">
+                  <div class="field">
+                    <label>Priority Level</label>
+                    <select id="priority" required>
+                      <option value="Emergency">Emergency</option>
+                      <option value="Field Operation">Field Operation</option>
+                      <option value="Logistic">Logistic</option>
+                      <option value="Routine">Routine</option>
+                      <option value="Administrative Support">Administrative Support</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label>Date Needed</label>
+                    <input type="date" id="dateNeeded" required />
+                  </div>
+                  <div class="field">
+                    <label>Estimated Duration (hours)</label>
+                    <input type="number" min="1" step="1" id="duration" required />
+                  </div>
+                </div>
+
+                <div class="form-grid-3">
+                  <div class="field">
+                    <label>Time Needed</label>
+                    <input type="time" id="timeNeeded" required />
+                  </div>
+                  <div class="field">
+                    <label>From</label>
+                    <input type="text" id="fromLocation" required />
+                  </div>
+                  <div class="field">
+                    <label>To</label>
+                    <input type="text" id="toLocation" required />
+                  </div>
+                </div>
+
+                <div class="form-grid-3">
+                  <div class="field">
+                    <label>No. of Passengers</label>
+                    <input type="number" min="1" id="passengers" required />
+                  </div>
+                  <div class="field">
+                    <label>Passenger Names</label>
+                    <input type="text" id="passengerNames" placeholder="Optional" />
+                  </div>
+                  <div class="field">
+                    <label>Vehicle Type Needed</label>
+                    <select id="vehicleType" required>
+                      <option value="Sedan">Sedan</option>
+                      <option value="Pickup">Pickup</option>
+                      <option value="Van">Van</option>
+                      <option value="Truck">Truck</option>
+                      <option value="Ambulance">Ambulance</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-grid">
+                  <div class="field">
+                    <label>Name of Driver (Manual)</label>
+                    <input type="text" id="manualDriverName" placeholder="Optional" />
+                  </div>
+                  <div class="field">
+                    <label>Plate No. (Manual)</label>
+                    <input type="text" id="manualPlateNo" placeholder="Optional" />
+                  </div>
+                </div>
+
+                <div class="mini-item" style="margin-bottom: 12px; background: #f8fafc;">
+                  <strong>Approval Flow</strong>
+                  <span class="muted">When submitted, this request is automatically sent to the admin approval queue and a local in-app notification is created.</span>
+                </div>
+
+                <div class="actions">
+                  <button type="submit" class="btn btn-primary">Submit for Approval</button>
+                  <button type="button" class="btn btn-secondary" id="requestFormReset">Reset Form</button>
+                </div>
+              </form>
+            </div>
+
+          </div>
+        </section>
+
+        <section id="approvals" class="tab-pane admin-only hidden-by-role">
+          <div class="section-header">
+            <div>
+              <h2>Admin Approval Queue</h2>
+              <p>Review requests submitted by secondary users and notify them of the decision.</p>
+            </div>
+            <div class="inline-actions">
+              <button class="btn btn-secondary" id="seedBtn">Load Sample Data</button>
+              <button class="btn btn-danger" id="resetBtn">Clear All Data</button>
+            </div>
+          </div>
+
+          <div id="approvalAlert" class="alert alert-info"></div>
+
+          <div class="card-grid">
+            <div class="card">
+              <h3>Approval Notifications</h3>
+              <div id="approvalNotificationList"></div>
+            </div>
+            <div class="card">
+              <h3>Decision Guide</h3>
+              <div class="mini-list">
+                <div class="mini-item"><strong>Approve</strong><span class="muted">Moves the request to the Scheduling Board and notifies the requester.</span></div>
+                <div class="mini-item"><strong>Reject</strong><span class="muted">Stops the request and records admin remarks for transparency.</span></div>
+                <div class="mini-item"><strong>Notify</strong><span class="muted">Pending requests automatically appear here for admin action.</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Date Needed</th>
+                    <th>Office</th>
+                    <th>Officer</th>
+                    <th>Route</th>
+                    <th>Vehicle Type</th>
+                    <th>Priority</th>
+                    <th>Status</th>
+                    <th>Admin Remarks</th>
+                    <th class="admin-only hidden-by-role">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="approvalTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section id="schedule" class="tab-pane active">
+          <div class="section-header">
+            <div class="admin-only hidden-by-role">
+              <h2>Daily Vehicle Scheduling Table</h2>
+              <p>Centralized under GSO Dispatcher Unit. Approved requests only.</p>
+            </div>
+            <div class="secondary-only hidden-by-role">
+              <h2>Live Schedule Board View</h2>
+              <p>Approved, ongoing, and completed trips.</p>
+            </div>
+          </div>
+
+          <div id="scheduleAlert" class="alert alert-info"></div>
+
+          <div class="card-grid admin-only hidden-by-role">
+            <div class="card">
+              <h3>Create Schedule</h3>
+              <form id="scheduleForm">
+                <div class="field">
+                  <label>Approved Request</label>
+                  <select id="scheduleRequestId" required></select>
+                </div>
+                <div class="form-grid-3">
+                  <div class="field">
+                    <label>Vehicle</label>
+                    <select id="scheduleVehicleId" required></select>
+                  </div>
+                  <div class="field">
+                    <label>Driver Name</label>
+                    <select id="scheduleDriver" required></select>
+                  </div>
+                  <div class="field">
+                    <label>Status</label>
+                    <select id="scheduleStatus" required>
+                      <option value="Approved">Approved</option>
+                      <option value="Ongoing">Ongoing</option>
+                      <option value="Completed">Completed</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="actions">
+                  <button type="submit" class="btn btn-primary">Add to Schedule</button>
+                </div>
+              </form>
+            </div>
+
+            <div class="card">
+              <h3>Scheduling Rules</h3>
+              <div class="mini-list">
+                <div class="mini-item"><strong>No overlapping schedules</strong><span class="muted">Same vehicle cannot be booked at overlapping times on the same date.</span></div>
+                <div class="mini-item"><strong>Priority override</strong><span class="muted">Emergency requests may replace lower-priority trips when resources are limited.</span></div>
+                <div class="mini-item"><strong>Trip consolidation</strong><span class="muted">Requests with the same route can be combined to save fuel.</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="section-header">
+              <div>
+                <h2 style="font-size: 20px;">Live Schedule Board</h2>
+                <p>Approved, ongoing, and completed trips.</p>
+              </div>
+            </div>
+            <div class="table-wrap excel-wrap">
+              <table id="scheduleBoardTable">
+                <thead>
+                  <tr>
+                    <th>Time</th>
+                    <th>Vehicle</th>
+                    <th>Plate No.</th>
+                    <th>Driver</th>
+                    <th>Requesting Office</th>
+                    <th>Route</th>
+                    <th>Purpose</th>
+                    <th>Priority</th>
+                    <th>Status</th>
+                    <th class="admin-only hidden-by-role">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="scheduleTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section id="dispatch" class="tab-pane admin-only hidden-by-role">
+          <div class="section-header">
+            <div>
+              <h2>Dispatch Logbook</h2>
+              <p>Each trip must record time, odometer, fuel, route, and remarks.</p>
+            </div>
+          </div>
+
+          <div id="dispatchAlert" class="alert alert-info"></div>
+
+          <div class="card-grid">
+            <div class="card">
+              <h3>Trip Monitoring Entry</h3>
+              <form id="dispatchForm">
+                <div class="field">
+                  <label>Scheduled Trip</label>
+                  <select id="dispatchScheduleId" required></select>
+                </div>
+                <div class="form-grid-3">
+                  <div class="field">
+                    <label>Time In</label>
+                    <input type="time" id="timeIn" required />
+                  </div>
+                  <div class="field">
+                    <label>Log Out</label>
+                    <input type="time" id="timeOut" required />
+                  </div>
+                  <div class="field">
+                    <label>Fuel Issued (L)</label>
+                    <input type="number" min="0" step="0.1" id="fuelIssued" required />
+                  </div>
+                </div>
+                <div class="form-grid">
+                  <div class="field">
+                    <label>Odometer Start</label>
+                    <input type="number" min="0" id="odometerStart" required />
+                  </div>
+                  <div class="field">
+                    <label>Odometer End</label>
+                    <input type="number" min="0" id="odometerEnd" required />
+                  </div>
+                </div>
+                <div class="field">
+                  <label>Route Taken</label>
+                  <input type="text" id="routeTaken" required />
+                </div>
+                <div class="field">
+                  <label>Remarks</label>
+                  <textarea id="dispatchRemarks"></textarea>
+                </div>
+                <div class="actions">
+                  <button type="submit" class="btn btn-primary">Save Dispatch Log</button>
+                </div>
+              </form>
+            </div>
+
+            <div class="card">
+              <h3>Dispatch Entries</h3>
+              <div id="dispatchList"></div>
+            </div>
+          </div>
+        </section>
+
+        <section id="reports" class="tab-pane">
+          <div class="section-header">
+            <div>
+              <h2>Weekly Reporting Output</h2>
+              <p>Total trips, fuel consumption, most used vehicles, and idle vehicles.</p>
+            </div>
+            <div class="excel-toolbar">
+              <button class="btn btn-secondary" id="exportExcelBtn">Export Excel</button>
+              <button class="btn btn-secondary" id="printReportBtn">Print Report</button>
+            </div>
+          </div>
+
+          <div class="card-grid">
+            <div class="card"><h3>Total Trips</h3><div class="stat-value" style="color: var(--primary);" id="reportTrips">0</div></div>
+            <div class="card"><h3>Fuel Consumption (L)</h3><div class="stat-value" style="color: var(--warning);" id="reportFuel">0</div></div>
+            <div class="card"><h3>Most Used Vehicle</h3><div class="stat-value" style="font-size: 20px;" id="reportMostUsed">-</div></div>
+            <div class="card"><h3>Idle Vehicles</h3><div class="stat-value" style="font-size: 20px;" id="reportIdle">-</div></div>
+          </div>
+
+          <div class="card-grid">
+            <div class="card">
+              <h3>Priority Summary</h3>
+              <div id="prioritySummary" class="mini-list"></div>
+            </div>
+            <div class="card">
+              <h3>Vehicle Utilization</h3>
+              <div id="vehicleSummary" class="mini-list"></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="excel-toolbar" style="margin-bottom: 12px;">
+              <input type="date" id="reportDateFrom" />
+              <input type="date" id="reportDateTo" />
+              <select id="reportStatusFilter" onchange="renderReports()">
+                <option value="all">All Status</option>
+                <option value="Approved">Approved</option>
+                <option value="Ongoing">Ongoing</option>
+                <option value="Completed">Completed</option>
+              </select>
+              <button class="btn btn-secondary" onclick="renderReports()">Apply Filter</button>
+            </div>
+            <div class="section-header">
+              <div>
+                <h2 style="font-size: 20px;">Summary Report Table</h2>
+                <p>Consolidated weekly trip, fuel, mileage, and trip status details.</p>
+              </div>
+              <div class="excel-toolbar">
+                <button class="btn btn-secondary" onclick="exportSummaryToExcel()">Export Excel</button>
+                <button class="btn btn-secondary" onclick="window.print()">Print</button>
+                <button class="btn btn-secondary" onclick="exportSummaryToGoogleSheets()">Google Sheets</button>
+                <button class="btn btn-secondary" onclick="setGoogleSheetsExportUrl()">Set Google Script URL</button>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Office</th>
+                    <th>Vehicle</th>
+                    <th>Plate No.</th>
+                    <th>Driver</th>
+                    <th>Route</th>
+                    <th>Priority</th>
+                    <th>Status</th>
+                    <th>Fuel (L)</th>
+                    <th>Distance</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="summaryReportTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section id="settings" class="tab-pane">
+          <div class="section-header">
+            <div>
+              <h2>Vehicles and Drivers</h2>
+              <p>Maintain fleet and driver records for scheduling.</p>
+            </div>
+          </div>
+
+          <div id="settingsAlert" class="alert alert-info"></div>
+
+          <div class="card-grid">
+
+            <div class="card">
+              <h3>Add Vehicle</h3>
+              <form id="vehicleForm">
+                <div class="form-grid-3">
+                  <div class="field">
+                    <label>Vehicle Name</label>
+                    <input type="text" id="vehicleName" required />
+                  </div>
+                  <div class="field">
+                    <label>Plate No.</label>
+                    <input type="text" id="vehiclePlate" required />
+                  </div>
+                  <div class="field">
+                    <label>Type</label>
+                    <select id="vehicleCategory" required>
+                      <option>Sedan</option>
+                      <option>Pickup</option>
+                      <option>Van</option>
+                      <option>Truck</option>
+                      <option>Ambulance</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="actions">
+                  <button type="submit" class="btn btn-primary">Save Vehicle</button>
+                </div>
+              </form>
+              <div id="vehicleList" style="margin-top: 16px;"></div>
+            </div>
+
+            <div class="card">
+              <h3>Add Driver</h3>
+              <form id="driverForm">
+                <div class="field">
+                  <label>Driver Name</label>
+                  <input type="text" id="driverName" required />
+                </div>
+                <div class="actions">
+                  <button type="submit" class="btn btn-primary">Save Driver</button>
+                </div>
+              </form>
+              <div id="driverList" style="margin-top: 16px;"></div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div class="footer-note">Vehicle Scheduling System for LGU – Iloilo City • Browser-based HTML, CSS, and JavaScript • Standalone local-storage version</div>
+  </div>
+
+  <script>
+    const state = {
+      requests: [],
+      schedules: [],
+      dispatchLogs: [],
+      vehicles: [],
+      drivers: [],
+      notifications: [],
+      currentRole: 'secondary'
+    };
+    let syncInProgress = false;
+    let queuedSync = null;
+
+    function uid(prefix) {
+      return prefix + '_' + Math.random().toString(36).slice(2, 10);
+    }
+
+    const STORAGE_KEY = 'lgu_vehicle_scheduling_state_v1';
+    const GOOGLE_EXPORT_URL_KEY = 'lgu_vehicle_google_export_url';
+    const GOOGLE_DRIVE_FOLDER_URL = 'https://drive.google.com/drive/folders/1jg1T-PHtvetWl6wB5l5e4_d6mRPol08N?usp=drive_link';
+
+    function gsPromise(method, ...args) {
+      return new Promise((resolve, reject) => {
+        try {
+          if (method === 'getState') {
+            const raw = localStorage.getItem(STORAGE_KEY);
+            resolve(raw ? JSON.parse(raw) : {});
+            return;
+          }
+
+          if (method === 'saveState') {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(args[0] || {}));
+            resolve({ ok: true });
+            return;
+          }
+
+          reject(new Error('Unsupported local method: ' + method));
+        } catch (err) {
+          reject(err);
+        }
+      });
+    }
+
+    function showAlert(id, message, type = 'info') {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.className = `alert show alert-${type}`;
+      el.textContent = message;
+      setTimeout(() => {
+        el.className = 'alert alert-info';
+        el.textContent = '';
+      }, 3500);
+    }
+
+    function priorityLabel(priority) {
+      if (priority === 'Emergency') return '<span class="pill priority-high">Emergency</span>';
+      if (priority === 'Field Operation') return '<span class="pill priority-medium">Field Operation</span>';
+      if (priority === 'Logistic') return '<span class="pill priority-medium">Logistic</span>';
+      if (priority === 'Routine') return '<span class="pill priority-low">Routine</span>';
+      if (priority === 'Administrative Support') return '<span class="pill priority-low">Administrative Support</span>';
+      return `<span class="pill priority-low">${priority || '-'}</span>`;
+    }
+
+    function statusLabel(status) {
+      const normalized = String(status || '').toLowerCase().replace(/\s+/g, '-');
+      return `<span class="pill status-${normalized}">${status}</span>`;
+    }
+
+    function formatDate(dateStr) {
+      if (!dateStr) return '-';
+      const d = new Date(dateStr + 'T00:00:00');
+      return d.toLocaleDateString('en-PH', { year: 'numeric', month: 'short', day: 'numeric' });
+    }
+
+    function formatDateTime(iso) {
+      if (!iso) return '-';
+      return new Date(iso).toLocaleString('en-PH', {
+        year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit'
+      });
+    }
+
+    function routeText(record) {
+      if (!record) return '-';
+      const from = (record.fromLocation || '').trim();
+      const to = (record.toLocation || '').trim();
+      if (from && to) return `${from} → ${to}`;
+      if (record.destination) return record.destination;
+      return from || to || '-';
+    }
+
+    function calculateEndTime(startTime, durationHours) {
+      const [h, m] = startTime.split(':').map(Number);
+      const totalMinutes = h * 60 + m + (Number(durationHours) * 60);
+      const endHour = Math.floor((totalMinutes % (24 * 60)) / 60);
+      const endMin = totalMinutes % 60;
+      return `${String(endHour).padStart(2, '0')}:${String(endMin).padStart(2, '0')}`;
+    }
+
+    function timeToMinutes(value) {
+      const [h, m] = value.split(':').map(Number);
+      return h * 60 + m;
+    }
+
+    function overlaps(aStart, aEnd, bStart, bEnd) {
+      return Math.max(timeToMinutes(aStart), timeToMinutes(bStart)) < Math.min(timeToMinutes(aEnd), timeToMinutes(bEnd));
+    }
+
+    function getRequestById(id) {
+      return state.requests.find(r => r.id === id);
+    }
+
+    function getVehicleById(id) {
+      return state.vehicles.find(v => v.id === id);
+    }
+
+    function getDispatchByScheduleId(scheduleId) {
+      return state.dispatchLogs.find(d => d.scheduleId === scheduleId);
+    }
+
+    function pushNotification(targetRole, message, type = 'info', requestId = null) {
+      state.notifications.unshift({
+        id: uid('note'),
+        targetRole,
+        message,
+        type,
+        requestId,
+        createdAt: new Date().toISOString(),
+        read: false
+      });
+    }
+
+    function markNotificationsRead(role) {
+      state.notifications.forEach(note => {
+        if (note.targetRole === role) note.read = true;
+      });
+    }
+
+    function seedDefaults() {
+      if (!state.vehicles.length) {
+        state.vehicles = [
+          { id: 'veh_pickup', name: 'Pickup', plateNo: 'ILO-201', type: 'Pickup' },
+          { id: 'veh_van', name: 'Van', plateNo: 'ILO-202', type: 'Van' },
+          { id: 'veh_truck', name: 'Truck', plateNo: 'DEF-789', type: 'Truck' },
+          { id: 'veh_ambulance', name: 'Ambulance', plateNo: 'ILO-203', type: 'Ambulance' }
+        ];
+      }
+      if (!state.drivers.length) {
+        state.drivers = ['Dela Cruz', 'Santos', 'Reyes', 'Garcia'];
+      }
+    }
+
+    function persistState(messageTargetId = null, messageText = '', type = 'success') {
+      const payload = JSON.parse(JSON.stringify({
+        requests: state.requests,
+        schedules: state.schedules,
+        dispatchLogs: state.dispatchLogs,
+        vehicles: state.vehicles,
+        drivers: state.drivers,
+        notifications: state.notifications,
+        currentRole: state.currentRole
+      }));
+
+      if (syncInProgress) {
+        queuedSync = { messageTargetId, messageText, type, payload };
+        return;
+      }
+
+      syncInProgress = true;
+      gsPromise('saveState', payload)
+        .then(() => {
+          if (messageTargetId && messageText) showAlert(messageTargetId, messageText, type);
+        })
+        .catch(err => {
+          console.error(err);
+          showAlert(messageTargetId || 'requestAlert', 'Saving failed. Your browser may be blocking local storage.', 'danger');
+        })
+        .finally(() => {
+          syncInProgress = false;
+          if (queuedSync) {
+            const queued = queuedSync;
+            queuedSync = null;
+            persistState(queued.messageTargetId, queued.messageText, queued.type);
+          }
+        });
+    }
+
+    function addRequest(evt) {
+      evt.preventDefault();
+      const request = {
+        id: uid('req'),
+        office: document.getElementById('office').value.trim(),
+        requestingOfficer: document.getElementById('requestingOfficer').value.trim(),
+        purpose: document.getElementById('purpose').value.trim(),
+        priority: document.getElementById('priority').value,
+        dateNeeded: document.getElementById('dateNeeded').value,
+        timeNeeded: document.getElementById('timeNeeded').value,
+        duration: Number(document.getElementById('duration').value),
+        fromLocation: document.getElementById('fromLocation').value.trim(),
+        toLocation: document.getElementById('toLocation').value.trim(),
+        destination: '',
+        passengers: Number(document.getElementById('passengers').value),
+        passengerNames: document.getElementById('passengerNames').value.trim(),
+        vehicleType: document.getElementById('vehicleType').value,
+        manualDriverName: document.getElementById('manualDriverName').value.trim(),
+        manualPlateNo: document.getElementById('manualPlateNo').value.trim(),
+        deptApproval: 'Pending',
+        dispatcherApproval: 'Pending',
+        status: 'For Approval',
+        adminRemarks: '',
+        submittedByRole: 'secondary',
+        createdAt: new Date().toISOString()
+      };
+
+      state.requests.unshift(request);
+      pushNotification('admin', `New ${request.priority.toLowerCase()} priority request from ${request.office} needs approval.`, 'info', request.id);
+      evt.target.reset();
+      renderAll();
+      switchTab('requests');
+      persistState('requestAlert', 'Request submitted successfully and saved on this device.', 'success');
+    }
+
+    function approveRequest(id) {
+      const request = getRequestById(id);
+      if (!request) return;
+      request.status = 'Approved';
+      request.deptApproval = 'Approved';
+      request.dispatcherApproval = 'Approved';
+      request.adminRemarks = 'Approved by admin and ready for scheduling.';
+      pushNotification('secondary', `${request.office} request was approved and is ready for scheduling.`, 'success', id);
+      renderAll();
+      persistState('approvalAlert', 'Request approved and saved on this device.', 'success');
+    }
+
+    function rejectRequest(id) {
+      const request = getRequestById(id);
+      if (!request) return;
+      const remarks = prompt('Enter admin remarks for rejection:', request.adminRemarks || '');
+      if (remarks === null) return;
+      request.status = 'Rejected';
+      request.deptApproval = 'Rejected';
+      request.dispatcherApproval = 'Rejected';
+      request.adminRemarks = remarks || 'Rejected by admin.';
+      pushNotification('secondary', `${request.office} request was rejected. Check admin remarks for details.`, 'danger', id);
+      renderAll();
+      persistState('approvalAlert', 'Request rejected and saved on this device.', 'info');
+    }
+
+    function addSchedule(evt) {
+      evt.preventDefault();
+      const requestId = document.getElementById('scheduleRequestId').value;
+      const vehicleId = document.getElementById('scheduleVehicleId').value;
+      const driver = document.getElementById('scheduleDriver').value;
+      const status = document.getElementById('scheduleStatus').value;
+
+      if (!requestId || !vehicleId || !driver) {
+        showAlert('scheduleAlert', 'Please select an approved request, vehicle, and driver.', 'danger');
+        return;
+      }
+
+      const request = getRequestById(requestId);
+      if (!request || request.status !== 'Approved') {
+        showAlert('scheduleAlert', 'Only admin-approved requests can be scheduled.', 'danger');
+        return;
+      }
+
+      const start = request.timeNeeded;
+      const end = calculateEndTime(request.timeNeeded, request.duration);
+
+      const conflict = state.schedules.find(s => {
+        const req = getRequestById(s.requestId);
+        if (!req || req.dateNeeded !== request.dateNeeded || s.vehicleId !== vehicleId) return false;
+        const reqEnd = calculateEndTime(req.timeNeeded, req.duration);
+        return overlaps(start, end, req.timeNeeded, reqEnd);
+      });
+
+      if (conflict) {
+        const conflictReq = getRequestById(conflict.requestId);
+        if (!(request.priority === 'HIGH' && conflictReq && conflictReq.priority !== 'HIGH')) {
+          showAlert('scheduleAlert', 'Scheduling conflict detected for the selected vehicle and time.', 'danger');
+          return;
+        }
+        showAlert('scheduleAlert', 'Emergency request override detected. Review overlapping trip before final dispatch.', 'info');
+      }
+
+      if (state.schedules.some(s => s.requestId === requestId)) {
+        showAlert('scheduleAlert', 'This request is already scheduled.', 'danger');
+        return;
+      }
+
+      state.schedules.unshift({ id: uid('sch'), requestId, vehicleId, driver, status, createdAt: new Date().toISOString() });
+      pushNotification('secondary', `${request.office} request has been scheduled by admin.`, 'success', requestId);
+      renderAll();
+      evt.target.reset();
+      persistState('scheduleAlert', 'Trip added to scheduling board and saved on this device.', 'success');
+    }
+
+    function addDispatchLog(evt) {
+      evt.preventDefault();
+      const scheduleId = document.getElementById('dispatchScheduleId').value;
+      if (!scheduleId) {
+        showAlert('dispatchAlert', 'Please select a scheduled trip first.', 'danger');
+        return;
+      }
+
+      const existing = getDispatchByScheduleId(scheduleId);
+      if (existing) {
+        showAlert('dispatchAlert', 'A dispatch log already exists for this schedule.', 'danger');
+        return;
+      }
+
+      const odometerStart = Number(document.getElementById('odometerStart').value);
+      const odometerEnd = Number(document.getElementById('odometerEnd').value);
+      if (odometerEnd < odometerStart) {
+        showAlert('dispatchAlert', 'Odometer End cannot be lower than Odometer Start.', 'danger');
+        return;
+      }
+
+      state.dispatchLogs.unshift({
+        id: uid('log'),
+        scheduleId,
+        timeOut: document.getElementById('timeOut').value,
+        timeIn: document.getElementById('timeIn').value,
+        fuelIssued: Number(document.getElementById('fuelIssued').value),
+        odometerStart,
+        odometerEnd,
+        routeTaken: document.getElementById('routeTaken').value.trim(),
+        remarks: document.getElementById('dispatchRemarks').value.trim(),
+        createdAt: new Date().toISOString()
+      });
+
+      const schedule = state.schedules.find(s => s.id === scheduleId);
+      if (schedule) {
+        schedule.status = 'Completed';
+        const request = getRequestById(schedule.requestId);
+        if (request) pushNotification('secondary', `${request.office} trip has been completed and logged by admin.`, 'info', request.id);
+      }
+
+      renderAll();
+      evt.target.reset();
+      persistState('dispatchAlert', 'Dispatch log saved on this device.', 'success');
+    }
+
+    function addVehicle(evt) {
+      evt.preventDefault();
+      const plateNo = document.getElementById('vehiclePlate').value.trim().toUpperCase();
+      if (state.vehicles.some(v => v.plateNo.toUpperCase() === plateNo)) {
+        alert('Plate number already exists.');
+        return;
+      }
+      state.vehicles.push({
+        id: uid('veh'),
+        name: document.getElementById('vehicleName').value.trim(),
+        plateNo,
+        type: document.getElementById('vehicleCategory').value
+      });
+      renderAll();
+      evt.target.reset();
+      persistState('settingsAlert', 'Vehicle saved on this device.', 'success');
+    }
+
+    function addDriver(evt) {
+      evt.preventDefault();
+      const driver = document.getElementById('driverName').value.trim();
+      if (!driver) return;
+      if (state.drivers.includes(driver)) {
+        alert('Driver already exists.');
+        return;
+      }
+      state.drivers.push(driver);
+      renderAll();
+      evt.target.reset();
+      persistState('settingsAlert', 'Driver saved on this device.', 'success');
+    }
+
+    function deleteRequest(id) {
+      const linkedSchedule = state.schedules.some(s => s.requestId === id);
+      if (linkedSchedule) {
+        alert('Cannot delete a request that is already scheduled.');
+        return;
+      }
+      state.requests = state.requests.filter(r => r.id !== id);
+      state.notifications = state.notifications.filter(n => n.requestId !== id);
+      renderAll();
+      persistState('approvalAlert', 'Request deleted from this device.', 'success');
+    }
+
+    function deleteSchedule(id) {
+      state.dispatchLogs = state.dispatchLogs.filter(d => d.scheduleId !== id);
+      state.schedules = state.schedules.filter(s => s.id !== id);
+      renderAll();
+      persistState('scheduleAlert', 'Schedule deleted from this device.', 'success');
+    }
+
+    function deleteVehicle(id) {
+      if (state.schedules.some(s => s.vehicleId === id)) {
+        alert('Cannot delete a vehicle that is already used in a schedule.');
+        return;
+      }
+      state.vehicles = state.vehicles.filter(v => v.id !== id);
+      renderAll();
+      persistState('settingsAlert', 'Vehicle deleted from this device.', 'success');
+    }
+
+    function deleteDriver(name) {
+      if (state.schedules.some(s => s.driver === name)) {
+        alert('Cannot delete a driver that is already used in a schedule.');
+        return;
+      }
+      state.drivers = state.drivers.filter(d => d !== name);
+      renderAll();
+      persistState('settingsAlert', 'Driver deleted from this device.', 'success');
+    }
+
+    function setScheduleStatus(id, status) {
+      const schedule = state.schedules.find(s => s.id === id);
+      if (!schedule) return;
+      schedule.status = status;
+      renderAll();
+      persistState('scheduleAlert', `Schedule status changed to ${status}.`, 'success');
+    }
+
+
+    function seedSampleData() {
+      seedDefaults();
+      if (state.requests.length || state.schedules.length) {
+        showAlert('approvalAlert', 'Sample data was skipped because existing data is already present.', 'info');
+        renderAll();
+        return;
+      }
+
+      const today = new Date().toISOString().slice(0, 10);
+      const req1 = {
+        id: uid('req'), office: 'CENRO', requestingOfficer: 'Maria Lopez', purpose: 'Waste Inspection',
+        priority: 'Field Operation', dateNeeded: today, timeNeeded: '08:00', duration: 2, fromLocation: 'City Hall', toLocation: 'Brgy. Tanza', destination: '',
+        passengers: 3, passengerNames: 'Team A', vehicleType: 'Pickup', deptApproval: 'Pending',
+        dispatcherApproval: 'Pending', status: 'For Approval', adminRemarks: '', submittedByRole: 'secondary', createdAt: new Date().toISOString()
+      };
+      const req2 = {
+        id: uid('req'), office: 'CHO', requestingOfficer: 'Ana Santos', purpose: 'Medical Outreach',
+        priority: 'Emergency', dateNeeded: today, timeNeeded: '09:00', duration: 3, fromLocation: 'City Health Office', toLocation: 'District Clinic', destination: '',
+        passengers: 5, passengerNames: 'Nurses', vehicleType: 'Van', deptApproval: 'Approved',
+        dispatcherApproval: 'Approved', status: 'Approved', adminRemarks: 'Approved for immediate scheduling.', submittedByRole: 'secondary', createdAt: new Date().toISOString()
+      };
+      const req3 = {
+        id: uid('req'), office: 'GSO', requestingOfficer: 'Pedro Reyes', purpose: 'Hauling',
+        priority: 'Logistic', dateNeeded: today, timeNeeded: '10:00', duration: 4, fromLocation: 'GSO Compound', toLocation: 'Dump Site', destination: '',
+        passengers: 2, passengerNames: 'Hauling Team', vehicleType: 'Truck', deptApproval: 'Approved',
+        dispatcherApproval: 'Approved', status: 'Approved', adminRemarks: 'Approved and ready for dispatch preparation.', submittedByRole: 'secondary', createdAt: new Date().toISOString()
+      };
+
+      state.requests.push(req1, req2, req3);
+      pushNotification('admin', `New request from ${req1.office} is waiting for approval.`, 'info', req1.id);
+      pushNotification('secondary', `Request from ${req2.office} has been approved by admin.`, 'success', req2.id);
+
+      const van = state.vehicles.find(v => v.type === 'Van');
+      const truck = state.vehicles.find(v => v.type === 'Truck');
+      state.schedules.push(
+        { id: uid('sch'), requestId: req2.id, vehicleId: van ? van.id : state.vehicles[0].id, driver: 'Santos', status: 'Approved', createdAt: new Date().toISOString() },
+        { id: uid('sch'), requestId: req3.id, vehicleId: truck ? truck.id : state.vehicles[0].id, driver: 'Reyes', status: 'Ongoing', createdAt: new Date().toISOString() }
+      );
+      renderAll();
+      persistState('approvalAlert', 'Sample workflow data loaded on this device.', 'success');
+    }
+
+    function renderRequests() {
+      const container = document.getElementById('requestList');
+      if (!container) return;
+
+      const sorted = [...state.requests]
+        .filter(r => r.status === 'For Approval')
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+      if (!sorted.length) {
+        container.innerHTML = '<div class="empty-state">No pending requests.</div>';
+        return;
+      }
+
+      container.innerHTML = sorted.slice(0, 10).map(r => `
+        <div class="mini-item">
+          <strong>${r.office} - ${r.purpose}</strong>
+          <div>${priorityLabel(r.priority)} ${statusLabel(r.status)}</div>
+          <div class="muted" style="margin-top: 6px;">${formatDate(r.dateNeeded)} • ${r.timeNeeded} • ${routeText(r)}</div>
+          <div class="muted">Officer: ${r.requestingOfficer} • Vehicle: ${r.vehicleType}${r.manualDriverName ? ' • Driver: ' + r.manualDriverName : ''}${r.manualPlateNo ? ' • Plate No.: ' + r.manualPlateNo : ''}</div>
+          <div class="inline-actions" style="margin-top: 10px;">
+            <button class="btn btn-danger" onclick="deleteRequest('${r.id}')">Delete</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderApprovalQueue() {
+      const tbody = document.getElementById('approvalTableBody');
+      const pending = [...state.requests].sort((a, b) => new Date(a.dateNeeded + 'T' + a.timeNeeded) - new Date(b.dateNeeded + 'T' + b.timeNeeded));
+      if (!pending.length) {
+        tbody.innerHTML = '<tr><td colspan="9"><div class="empty-state">No requests available.</div></td></tr>';
+      } else {
+        tbody.innerHTML = pending.map(r => `
+          <tr>
+            <td>${formatDate(r.dateNeeded)}<br><strong>${r.timeNeeded}</strong></td>
+            <td>${r.office}</td>
+            <td>${r.requestingOfficer}</td>
+            <td>${routeText(r)}</td>
+            <td>${r.vehicleType}${r.manualDriverName ? `<br><span class="muted">Driver: ${r.manualDriverName}</span>` : ''}${r.manualPlateNo ? `<br><span class="muted">Plate No.: ${r.manualPlateNo}</span>` : ''}</td>
+            <td>${priorityLabel(r.priority)}</td>
+            <td>${statusLabel(r.status)}</td>
+            <td>${r.adminRemarks || '-'}</td>
+            <td>
+              <div class="inline-actions">
+                ${r.status === 'For Approval' ? `<button class="btn btn-success" onclick="approveRequest('${r.id}')">Approve</button><button class="btn btn-danger" onclick="rejectRequest('${r.id}')">Reject</button>` : ''}
+                ${r.status !== 'Approved' ? `<button class="btn btn-secondary" onclick="deleteRequest('${r.id}')">Delete</button>` : ''}
+              </div>
+            </td>
+          </tr>
+        `).join('');
+      }
+      const adminNotifications = state.notifications.filter(n => n.targetRole === 'admin').slice(0, 6);
+      const list = document.getElementById('approvalNotificationList');
+      list.innerHTML = adminNotifications.length ? adminNotifications.map(note => `
+        <div class="mini-item notification-item">
+          <div>
+            <strong>${note.message}</strong>
+            <small>${formatDateTime(note.createdAt)}</small>
+          </div>
+          <span class="pill status-pending">${note.read ? 'Seen' : 'New'}</span>
+        </div>
+      `).join('') : '<div class="empty-state">No admin notifications.</div>';
+    }
+
+    function renderScheduleOptions() {
+      const requestSelect = document.getElementById('scheduleRequestId');
+      const vehicleSelect = document.getElementById('scheduleVehicleId');
+      const dispatchSelect = document.getElementById('dispatchScheduleId');
+      const driverSelect = document.getElementById('scheduleDriver');
+
+      const approvedUnscheduledRequests = state.requests.filter(r => r.status === 'Approved' && !state.schedules.some(s => s.requestId === r.id));
+      requestSelect.innerHTML = approvedUnscheduledRequests.length
+        ? approvedUnscheduledRequests.map(r => `<option value="${r.id}">${r.office} | ${formatDate(r.dateNeeded)} ${r.timeNeeded} | ${routeText(r)} | ${r.vehicleType}</option>`).join('')
+        : '<option value="">No approved requests ready for scheduling</option>';
+      requestSelect.disabled = !approvedUnscheduledRequests.length;
+
+      vehicleSelect.innerHTML = state.vehicles.length
+        ? state.vehicles.map(v => `<option value="${v.id}">${v.name} - ${v.plateNo} (${v.type})</option>`).join('')
+        : '<option value="">No vehicles available</option>';
+      vehicleSelect.disabled = !state.vehicles.length;
+
+      driverSelect.innerHTML = state.drivers.length
+        ? state.drivers.map(d => `<option value="${d}">${d}</option>`).join('')
+        : '<option value="">No drivers available</option>';
+      driverSelect.disabled = !state.drivers.length;
+
+      const loggableSchedules = state.schedules.filter(s => !state.dispatchLogs.some(d => d.scheduleId === s.id));
+      dispatchSelect.innerHTML = loggableSchedules.length
+        ? loggableSchedules.map(s => {
+            const req = getRequestById(s.requestId);
+            const veh = getVehicleById(s.vehicleId);
+            return `<option value="${s.id}">${req ? req.office : '-'} | ${req ? routeText(req) : '-'} | ${veh ? veh.plateNo : '-'} | ${req ? req.dateNeeded : '-'}</option>`;
+          }).join('')
+        : '<option value="">No schedules available</option>';
+      dispatchSelect.disabled = !loggableSchedules.length;
+    }
+
+    function renderScheduleTable() {
+      const tbody = document.getElementById('scheduleTableBody');
+      const sorted = [...state.schedules].sort((a, b) => {
+        const reqA = getRequestById(a.requestId);
+        const reqB = getRequestById(b.requestId);
+        const dtA = new Date(`${reqA?.dateNeeded || '1970-01-01'}T${reqA?.timeNeeded || '00:00'}`);
+        const dtB = new Date(`${reqB?.dateNeeded || '1970-01-01'}T${reqB?.timeNeeded || '00:00'}`);
+        return dtA - dtB;
+      });
+      if (!sorted.length) {
+        tbody.innerHTML = '<tr><td colspan="10"><div class="empty-state">No schedules yet.</div></td></tr>';
+        return;
+      }
+      tbody.innerHTML = sorted.map(s => {
+        const req = getRequestById(s.requestId);
+        const veh = getVehicleById(s.vehicleId);
+        if (!req) return '';
+        const end = calculateEndTime(req.timeNeeded, req.duration);
+        return `
+          <tr>
+            <td>${formatDate(req.dateNeeded)}<br><strong>${req.timeNeeded} - ${end}</strong></td>
+            <td>${veh ? veh.name : '-'}</td>
+            <td>${veh ? veh.plateNo : '-'}</td>
+            <td>${s.driver}</td>
+            <td>${req.office}</td>
+            <td>${routeText(req)}</td>
+            <td>${req.purpose}</td>
+            <td>${priorityLabel(req.priority)}</td>
+            <td>${statusLabel(s.status)}</td>
+            <td class="admin-only hidden-by-role">
+              <div class="inline-actions">
+                <button class="btn btn-secondary" onclick="setScheduleStatus('${s.id}', 'Approved')">Approved</button>
+                <button class="btn btn-success" onclick="setScheduleStatus('${s.id}', 'Ongoing')">Ongoing</button>
+                <button class="btn btn-secondary" onclick="setScheduleStatus('${s.id}', 'Completed')">Completed</button>
+                <button class="btn btn-danger" onclick="deleteSchedule('${s.id}')">Delete</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function renderDispatchLogs() {
+      const container = document.getElementById('dispatchList');
+      if (!state.dispatchLogs.length) {
+        container.innerHTML = '<div class="empty-state">No dispatch log entries yet.</div>';
+        return;
+      }
+      container.innerHTML = state.dispatchLogs.map(log => {
+        const schedule = state.schedules.find(s => s.id === log.scheduleId);
+        const req = schedule ? getRequestById(schedule.requestId) : null;
+        const veh = schedule ? getVehicleById(schedule.vehicleId) : null;
+        const distance = log.odometerEnd - log.odometerStart;
+        return `
+          <div class="mini-item">
+            <strong>${req ? req.office : '-'} - ${req ? routeText(req) : '-'}</strong>
+            <div class="muted">${veh ? veh.name + ' / ' + veh.plateNo : '-'} • Driver: ${schedule ? schedule.driver : '-'}</div>
+            <div class="muted">Time Out/In: ${log.timeOut} - ${log.timeIn}</div>
+            <div class="muted">Odometer: ${log.odometerStart} to ${log.odometerEnd} (${distance} km est.)</div>
+            <div class="muted">Fuel Issued: ${log.fuelIssued} L</div>
+            <div class="muted">Route: ${log.routeTaken}</div>
+            <div class="muted">Remarks: ${log.remarks || '-'}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderVehiclesAndDrivers() {
+      document.getElementById('vehicleList').innerHTML = state.vehicles.length
+        ? '<div class="mini-list">' + state.vehicles.map(v => `<div class="mini-item"><strong>${v.name}</strong><span class="muted">${v.plateNo} • ${v.type}</span><div class="inline-actions" style="margin-top: 10px;"><button class="btn btn-danger" onclick="deleteVehicle('${v.id}')">Delete Vehicle</button></div></div>`).join('') + '</div>'
+        : '<div class="empty-state">No vehicles yet.</div>';
+      document.getElementById('driverList').innerHTML = state.drivers.length
+        ? '<div class="mini-list">' + state.drivers.map(d => `<div class="mini-item"><strong>${d}</strong><div class="inline-actions" style="margin-top: 10px;"><button class="btn btn-danger" onclick="deleteDriver('${d}')">Delete Driver</button></div></div>`).join('') + '</div>'
+        : '<div class="empty-state">No drivers yet.</div>';
+    }
+
+    function renderStats() {
+      document.getElementById('statPending').textContent = state.requests.filter(r => r.status === 'For Approval').length;
+      document.getElementById('statApproved').textContent = state.schedules.filter(s => s.status === 'Approved').length;
+      document.getElementById('statOngoing').textContent = state.schedules.filter(s => s.status === 'Ongoing').length;
+      document.getElementById('statCompleted').textContent = state.schedules.filter(s => s.status === 'Completed').length;
+    }
+
+    function getFilteredSchedules() {
+      const from = document.getElementById('reportDateFrom')?.value || '';
+      const to = document.getElementById('reportDateTo')?.value || '';
+      const status = document.getElementById('reportStatusFilter')?.value || 'all';
+
+      return [...state.schedules].filter(schedule => {
+        const req = getRequestById(schedule.requestId);
+        if (!req) return false;
+
+        if (from && req.dateNeeded < from) return false;
+        if (to && req.dateNeeded > to) return false;
+        if (status !== 'all' && schedule.status !== status) return false;
+
+        return true;
+      });
+    }
+
+    function renderReports() {
+      const filteredSchedules = getFilteredSchedules();
+      const totalTrips = filteredSchedules.length;
+      const fuel = filteredSchedules.reduce((sum, schedule) => {
+        const log = getDispatchByScheduleId(schedule.id);
+        return sum + Number(log?.fuelIssued || 0);
+      }, 0);
+      const usageMap = {};
+      filteredSchedules.forEach(s => { usageMap[s.vehicleId] = (usageMap[s.vehicleId] || 0) + 1; });
+      let mostUsedVehicle = '-';
+      let highest = 0;
+      Object.entries(usageMap).forEach(([vehicleId, count]) => {
+        if (count > highest) {
+          highest = count;
+          const v = getVehicleById(vehicleId);
+          mostUsedVehicle = v ? `${v.name} (${v.plateNo})` : '-';
+        }
+      });
+      const idleVehicles = state.vehicles.filter(v => !usageMap[v.id]).map(v => `${v.name} (${v.plateNo})`);
+      document.getElementById('reportTrips').textContent = totalTrips;
+      document.getElementById('reportFuel').textContent = fuel.toFixed(1);
+      document.getElementById('reportMostUsed').textContent = mostUsedVehicle;
+      document.getElementById('reportIdle').textContent = idleVehicles.length ? idleVehicles.join(', ') : 'None';
+      const priorityCounts = {
+        'Emergency': 0,
+        'Field Operation': 0,
+        'Logistic': 0,
+        'Routine': 0,
+        'Administrative Support': 0
+      };
+      filteredSchedules.forEach(schedule => {
+        const req = getRequestById(schedule.requestId);
+        if (req && Object.prototype.hasOwnProperty.call(priorityCounts, req.priority)) priorityCounts[req.priority]++;
+      });
+      document.getElementById('prioritySummary').innerHTML = [
+        `<div class="mini-item"><strong>Emergency</strong><span class="muted">${priorityCounts['Emergency']} request(s)</span></div>`,
+        `<div class="mini-item"><strong>Field Operation</strong><span class="muted">${priorityCounts['Field Operation']} request(s)</span></div>`,
+        `<div class="mini-item"><strong>Logistic</strong><span class="muted">${priorityCounts['Logistic']} request(s)</span></div>`,
+        `<div class="mini-item"><strong>Routine</strong><span class="muted">${priorityCounts['Routine']} request(s)</span></div>`,
+        `<div class="mini-item"><strong>Administrative Support</strong><span class="muted">${priorityCounts['Administrative Support']} request(s)</span></div>`
+      ].join('');
+      const vehicleSummaryEl = document.getElementById('vehicleSummary');
+      vehicleSummaryEl.innerHTML = state.vehicles.length
+        ? state.vehicles.map(v => `<div class="mini-item"><strong>${v.name} (${v.plateNo})</strong><span class="muted">${usageMap[v.id] || 0} trip(s)</span></div>`).join('')
+        : '<div class="empty-state">No vehicles available.</div>';
+      const summaryTableBody = document.getElementById('summaryReportTableBody');
+      if (!filteredSchedules.length) {
+        summaryTableBody.innerHTML = '<tr><td colspan="11"><div class="empty-state">No report data available for the selected filter.</div></td></tr>';
+        return;
+      }
+      summaryTableBody.innerHTML = filteredSchedules
+        .sort((a, b) => new Date(getRequestById(b.requestId)?.dateNeeded || 0) - new Date(getRequestById(a.requestId)?.dateNeeded || 0))
+        .map(schedule => {
+          const req = getRequestById(schedule.requestId);
+          const vehicle = getVehicleById(schedule.vehicleId);
+          const log = getDispatchByScheduleId(schedule.id);
+          const distance = log ? Math.max(0, Number(log.odometerEnd) - Number(log.odometerStart)) : 0;
+          return `<tr><td>${req ? formatDate(req.dateNeeded) : '-'}</td><td>${req ? req.office : '-'}</td><td>${vehicle ? vehicle.name : '-'}</td><td>${vehicle ? vehicle.plateNo : '-'}</td><td>${schedule.driver || '-'}</td><td>${req ? routeText(req) : '-'}</td><td>${req ? priorityLabel(req.priority) : '-'}</td><td>${statusLabel(schedule.status)}</td><td>${log ? Number(log.fuelIssued).toFixed(1) : '0.0'}</td><td>${distance} km</td><td><button class="btn btn-danger" onclick="deleteSchedule('${schedule.id}')">Delete</button></td></tr>`;
+        }).join('');
+    }
+
+    function renderNotifications() {
+      const pendingAdminCount = state.requests.filter(r => r.status === 'For Approval').length;
+      document.getElementById('sidebarApprovalBadge').textContent = pendingAdminCount;
+      document.getElementById('roleNote').textContent = '';
+    }
+
+    function applyRoleVisibility() {
+      document.querySelectorAll('[data-role-scope]').forEach(btn => {
+        const allowed = btn.dataset.roleScope;
+        btn.style.display = (allowed === 'all' || allowed === state.currentRole) ? '' : 'none';
+      });
+      document.querySelectorAll('.admin-only').forEach(el => el.classList.toggle('hidden-by-role', state.currentRole !== 'admin'));
+      document.querySelectorAll('.secondary-only').forEach(el => el.classList.toggle('hidden-by-role', state.currentRole !== 'secondary'));
+      const activeTab = document.querySelector('.tab-pane.active')?.id || 'requests';
+      const currentTabBtn = document.querySelector(`.nav-btn[data-tab="${activeTab}"]`);
+      if (!currentTabBtn || currentTabBtn.style.display === 'none') {
+        switchTab(state.currentRole === 'admin' ? 'approvals' : 'schedule');
+      }
+      document.querySelectorAll('.role-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.role === state.currentRole));
+    }
+
+    function renderAll() {
+      renderRequests();
+      renderApprovalQueue();
+      renderScheduleOptions();
+      renderScheduleTable();
+      renderDispatchLogs();
+      renderVehiclesAndDrivers();
+      renderStats();
+      renderReports();
+      renderNotifications();
+      applyRoleVisibility();
+    }
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.tab === tabId));
+      document.querySelectorAll('.tab-pane').forEach(tab => tab.classList.toggle('active', tab.id === tabId));
+    }
+    function switchRole(role) {
+      state.currentRole = role;
+      markNotificationsRead(role);
+      applyRoleVisibility();
+      renderNotifications();
+      switchTab(role === 'admin' ? 'approvals' : 'schedule');
+      persistState();
+    }
+
+    function xmlEscape(value) {
+      return String(value == null ? '' : value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&apos;');
+    }
+
+    function columnLetter(index) {
+      let n = index + 1;
+      let s = '';
+      while (n > 0) {
+        const rem = (n - 1) % 26;
+        s = String.fromCharCode(65 + rem) + s;
+        n = Math.floor((n - 1) / 26);
+      }
+      return s;
+    }
+
+    function buildSheetXml(rows) {
+      const sheetRows = rows.map((row, rowIndex) => {
+        const cells = row.map((value, colIndex) => {
+          const ref = `${columnLetter(colIndex)}${rowIndex + 1}`;
+          return `<c r="${ref}" t="inlineStr"><is><t xml:space="preserve">${xmlEscape(value)}</t></is></c>`;
+        }).join('');
+        return `<row r="${rowIndex + 1}">${cells}</row>`;
+      }).join('');
+
+      const lastCell = `${columnLetter(Math.max(0, (rows[0]?.length || 1) - 1))}${Math.max(1, rows.length)}`;
+      return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><dimension ref="A1:${lastCell}"/><sheetViews><sheetView workbookViewId="0"/></sheetViews><sheetFormatPr defaultRowHeight="15"/><sheetData>${sheetRows}</sheetData></worksheet>`;
+    }
+
+    function makeCrcTable() {
+      const table = new Uint32Array(256);
+      for (let i = 0; i < 256; i += 1) {
+        let c = i;
+        for (let j = 0; j < 8; j += 1) {
+          c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
+        }
+        table[i] = c >>> 0;
+      }
+      return table;
+    }
+
+    const CRC_TABLE = makeCrcTable();
+
+    function crc32(bytes) {
+      let crc = 0xFFFFFFFF;
+      for (let i = 0; i < bytes.length; i += 1) {
+        crc = CRC_TABLE[(crc ^ bytes[i]) & 0xFF] ^ (crc >>> 8);
+      }
+      return (crc ^ 0xFFFFFFFF) >>> 0;
+    }
+
+    function dosDateTime(date = new Date()) {
+      const year = Math.max(1980, date.getFullYear());
+      const month = date.getMonth() + 1;
+      const day = date.getDate();
+      const hours = date.getHours();
+      const minutes = date.getMinutes();
+      const seconds = Math.floor(date.getSeconds() / 2);
+      return {
+        time: ((hours & 0x1F) << 11) | ((minutes & 0x3F) << 5) | (seconds & 0x1F),
+        date: (((year - 1980) & 0x7F) << 9) | ((month & 0x0F) << 5) | (day & 0x1F)
+      };
+    }
+
+    function createZip(files) {
+      const encoder = new TextEncoder();
+      const fileEntries = files.map(file => {
+        const nameBytes = encoder.encode(file.name);
+        const dataBytes = encoder.encode(file.content);
+        const crc = crc32(dataBytes);
+        return { nameBytes, dataBytes, crc, name: file.name };
+      });
+
+      let offset = 0;
+      const localParts = [];
+      const centralParts = [];
+      const stamp = dosDateTime(new Date());
+
+      fileEntries.forEach(entry => {
+        const localHeader = new Uint8Array(30 + entry.nameBytes.length);
+        const localView = new DataView(localHeader.buffer);
+        localView.setUint32(0, 0x04034b50, true);
+        localView.setUint16(4, 20, true);
+        localView.setUint16(6, 0, true);
+        localView.setUint16(8, 0, true);
+        localView.setUint16(10, stamp.time, true);
+        localView.setUint16(12, stamp.date, true);
+        localView.setUint32(14, entry.crc, true);
+        localView.setUint32(18, entry.dataBytes.length, true);
+        localView.setUint32(22, entry.dataBytes.length, true);
+        localView.setUint16(26, entry.nameBytes.length, true);
+        localView.setUint16(28, 0, true);
+        localHeader.set(entry.nameBytes, 30);
+        localParts.push(localHeader, entry.dataBytes);
+
+        const centralHeader = new Uint8Array(46 + entry.nameBytes.length);
+        const centralView = new DataView(centralHeader.buffer);
+        centralView.setUint32(0, 0x02014b50, true);
+        centralView.setUint16(4, 20, true);
+        centralView.setUint16(6, 20, true);
+        centralView.setUint16(8, 0, true);
+        centralView.setUint16(10, 0, true);
+        centralView.setUint16(12, stamp.time, true);
+        centralView.setUint16(14, stamp.date, true);
+        centralView.setUint32(16, entry.crc, true);
+        centralView.setUint32(20, entry.dataBytes.length, true);
+        centralView.setUint32(24, entry.dataBytes.length, true);
+        centralView.setUint16(28, entry.nameBytes.length, true);
+        centralView.setUint16(30, 0, true);
+        centralView.setUint16(32, 0, true);
+        centralView.setUint16(34, 0, true);
+        centralView.setUint16(36, 0, true);
+        centralView.setUint32(38, 0, true);
+        centralView.setUint32(42, offset, true);
+        centralHeader.set(entry.nameBytes, 46);
+        centralParts.push(centralHeader);
+
+        offset += localHeader.length + entry.dataBytes.length;
+      });
+
+      const centralSize = centralParts.reduce((sum, part) => sum + part.length, 0);
+      const endRecord = new Uint8Array(22);
+      const endView = new DataView(endRecord.buffer);
+      endView.setUint32(0, 0x06054b50, true);
+      endView.setUint16(4, 0, true);
+      endView.setUint16(6, 0, true);
+      endView.setUint16(8, fileEntries.length, true);
+      endView.setUint16(10, fileEntries.length, true);
+      endView.setUint32(12, centralSize, true);
+      endView.setUint32(16, offset, true);
+      endView.setUint16(20, 0, true);
+
+      return new Blob([...localParts, ...centralParts, endRecord], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    }
+
+    function exportSummaryToExcel() {
+      const rows = [[
+        'Row', 'Date', 'Office', 'Vehicle', 'Plate No.', 'Driver', 'From', 'To', 'Priority', 'Status', 'Fuel (L)', 'Distance', 'Remarks'
+      ]];
+      const filteredSchedules = getFilteredSchedules();
+      filteredSchedules
+        .sort((a, b) => new Date(getRequestById(b.requestId)?.dateNeeded || 0) - new Date(getRequestById(a.requestId)?.dateNeeded || 0))
+        .forEach((schedule, index) => {
+          const req = getRequestById(schedule.requestId);
+          const vehicle = getVehicleById(schedule.vehicleId);
+          const log = getDispatchByScheduleId(schedule.id);
+          const distance = log ? Math.max(0, Number(log.odometerEnd) - Number(log.odometerStart)) : 0;
+          rows.push([
+            index + 1,
+            req ? formatDate(req.dateNeeded) : '-',
+            req ? req.office : '-',
+            vehicle ? vehicle.name : '-',
+            vehicle ? vehicle.plateNo : '-',
+            schedule.driver || '-',
+            req ? (req.fromLocation || '-') : '-',
+            req ? (req.toLocation || req.destination || '-') : '-',
+            req ? req.priority : '-',
+            schedule.status || '-',
+            log ? Number(log.fuelIssued).toFixed(1) : '0.0',
+            `${distance} km`,
+            log ? (log.remarks || '-') : '-'
+          ]);
+        });
+
+      const timestamp = new Date().toISOString();
+      const files = [
+        {
+          name: '[Content_Types].xml',
+          content: `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/><Override PartName="/docProps/app.xml" ContentType="application/vnd.openxmlformats-officedocument.extended-properties+xml"/></Types>`
+        },
+        {
+          name: '_rels/.rels',
+          content: `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties" Target="docProps/core.xml"/><Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/extended-properties" Target="docProps/app.xml"/></Relationships>`
+        },
+        {
+          name: 'docProps/core.xml',
+          content: `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:dcmitype="http://purl.org/dc/dcmitype/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><dc:creator>ChatGPT</dc:creator><cp:lastModifiedBy>ChatGPT</cp:lastModifiedBy><dcterms:created xsi:type="dcterms:W3CDTF">${timestamp}</dcterms:created><dcterms:modified xsi:type="dcterms:W3CDTF">${timestamp}</dcterms:modified><dc:title>Vehicle Summary Report</dc:title></cp:coreProperties>`
+        },
+        {
+          name: 'docProps/app.xml',
+          content: `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Properties xmlns="http://schemas.openxmlformats.org/officeDocument/2006/extended-properties" xmlns:vt="http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes"><Application>Vehicle Scheduling System</Application></Properties>`
+        },
+        {
+          name: 'xl/workbook.xml',
+          content: `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="Summary Report" sheetId="1" r:id="rId1"/></sheets></workbook>`
+        },
+        {
+          name: 'xl/_rels/workbook.xml.rels',
+          content: `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/></Relationships>`
+        },
+        {
+          name: 'xl/worksheets/sheet1.xml',
+          content: buildSheetXml(rows)
+        }
+      ];
+
+      const blob = createZip(files);
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `vehicle_summary_report_${new Date().toISOString().slice(0, 10)}.xlsx`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    }
+
+    function getSummaryExportRows() {
+      const filteredSchedules = getFilteredSchedules();
+      return filteredSchedules
+        .sort((a, b) => new Date(getRequestById(b.requestId)?.dateNeeded || 0) - new Date(getRequestById(a.requestId)?.dateNeeded || 0))
+        .map((schedule, index) => {
+          const req = getRequestById(schedule.requestId);
+          const vehicle = getVehicleById(schedule.vehicleId);
+          const log = getDispatchByScheduleId(schedule.id);
+          const distance = log ? Math.max(0, Number(log.odometerEnd) - Number(log.odometerStart)) : 0;
+          return {
+            row: index + 1,
+            date: req ? formatDate(req.dateNeeded) : '-',
+            office: req ? req.office : '-',
+            vehicle: vehicle ? vehicle.name : '-',
+            plateNo: vehicle ? vehicle.plateNo : '-',
+            driver: schedule.driver || '-',
+            from: req ? (req.fromLocation || '-') : '-',
+            to: req ? (req.toLocation || req.destination || '-') : '-',
+            priority: req ? req.priority : '-',
+            status: schedule.status || '-',
+            fuelLiters: log ? Number(log.fuelIssued).toFixed(1) : '0.0',
+            distance: `${distance} km`,
+            remarks: log ? (log.remarks || '-') : '-'
+          };
+        });
+    }
+
+    function setGoogleSheetsExportUrl() {
+      const current = localStorage.getItem(GOOGLE_EXPORT_URL_KEY) || '';
+      const value = prompt('Paste your deployed Google Apps Script Web App URL:', current);
+      if (value === null) return;
+      const trimmed = value.trim();
+      if (!trimmed) {
+        localStorage.removeItem(GOOGLE_EXPORT_URL_KEY);
+        alert('Google Script URL removed.');
+        return;
+      }
+      localStorage.setItem(GOOGLE_EXPORT_URL_KEY, trimmed);
+      alert('Google Script URL saved.');
+    }
+    async function exportSummaryToGoogleSheets() {
+  const exportButton = document.querySelector('button[onclick="exportSummaryToGoogleSheets()"]');
+  const originalButtonText = exportButton ? exportButton.textContent : '';
+  const setBusy = (busy) => {
+    if (!exportButton) return;
+    exportButton.disabled = busy;
+    exportButton.textContent = busy ? 'Exporting...' : originalButtonText;
+  };
+
+  const scriptUrl = 'https://script.google.com/macros/s/AKfycbw2UGMuJIH4eHuHikVUZWCEqSJI7rQVIM1OFU0tJDqsNsecs5bGQpv8F4OJuj0OaUagXw/exec';
+  localStorage.setItem(GOOGLE_EXPORT_URL_KEY, scriptUrl);
+
+  const rows = getSummaryExportRows();
+  if (!rows.length) {
+    alert('No filtered report data available to export to Google Sheets.');
+    return;
+  }
+
+  const payload = {
+    sheetName: `Vehicle Summary ${new Date().toISOString().slice(0, 10)}`,
+    folderUrl: GOOGLE_DRIVE_FOLDER_URL,
+    generatedAt: new Date().toISOString(),
+    filters: {
+      from: document.getElementById('reportDateFrom')?.value || '',
+      to: document.getElementById('reportDateTo')?.value || '',
+      status: document.getElementById('reportStatusFilter')?.value || 'all'
+    },
+    rows
+  };
+
+  const tryParseResponse = (rawText) => {
+    const raw = String(rawText || '').trim();
+    if (!raw) return {};
+
+    try {
+      return JSON.parse(raw);
+    } catch (err) {
+      const result = { raw };
+      const sheetMatch = raw.match(/https:\/\/docs\.google\.com\/spreadsheets\/[^\s"'<>]+/i);
+      const folderMatch = raw.match(/https:\/\/drive\.google\.com\/[^\s"'<>]+/i);
+      if (sheetMatch) result.sheetUrl = sheetMatch[0];
+      if (folderMatch) result.folderUrl = folderMatch[0];
+      return result;
+    }
+  };
+
+  setBusy(true);
+
+  try {
+    const response = await fetch(scriptUrl, {
+      method: 'POST',
+      mode: 'cors',
+      cache: 'no-store',
+      redirect: 'follow',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload)
+    });
+
+    const raw = await response.text();
+    const result = tryParseResponse(raw);
+
+    if (!response.ok) {
+      throw new Error(result.error || result.message || `HTTP ${response.status}`);
+    }
+
+    if (result.ok === false) {
+      throw new Error(result.error || result.message || 'The Apps Script returned an error.');
+    }
+
+    const lowerRaw = String(raw || '').toLowerCase();
+    if (!result.sheetUrl && !result.folderUrl && /error|exception|denied|forbidden|unauthorized|syntaxerror/.test(lowerRaw)) {
+      throw new Error(result.error || result.message || raw);
+    }
+
+    const destination = result.sheetUrl || result.folderUrl || GOOGLE_DRIVE_FOLDER_URL;
+    window.open(destination, '_blank');
+    alert('Report exported to Google Sheets successfully.');
+  } catch (error) {
+    console.error(error);
+    const message = String(error && error.message ? error.message : 'Unknown error.');
+    alert(`Google Sheets export failed. ${message}`);
+  } finally {
+    setBusy(false);
+  }
+}
+
+    function resetAllData() {
+      if (!confirm('Clear all saved requests, approvals, schedules, logs, notifications, vehicles, and drivers?')) return;
+      state.requests = [];
+      state.schedules = [];
+      state.dispatchLogs = [];
+      state.vehicles = [];
+      state.drivers = [];
+      state.notifications = [];
+      seedDefaults();
+      renderAll();
+      persistState('approvalAlert', 'All data has been cleared from this device.', 'success');
+    }
+
+    function bootstrap() {
+      seedDefaults();
+      renderAll();
+      gsPromise('getState')
+        .then(remote => {
+          state.requests = remote.requests || [];
+          state.schedules = remote.schedules || [];
+          state.dispatchLogs = remote.dispatchLogs || [];
+          state.vehicles = remote.vehicles || [];
+          state.drivers = remote.drivers || [];
+          state.notifications = remote.notifications || [];
+          state.currentRole = 'secondary';
+          seedDefaults();
+          renderAll();
+        })
+        .catch(err => {
+          console.error(err);
+          showAlert('requestAlert', 'Could not load saved local data. Your browser storage may be unavailable.', 'danger');
+        });
+    }
+
+    document.querySelectorAll('.nav-btn').forEach(btn => btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
+    document.querySelectorAll('.role-btn').forEach(btn => btn.addEventListener('click', () => switchRole(btn.dataset.role)));
+    document.getElementById('requestForm').addEventListener('submit', addRequest);
+    document.getElementById('scheduleForm').addEventListener('submit', addSchedule);
+    document.getElementById('dispatchForm').addEventListener('submit', addDispatchLog);
+    document.getElementById('vehicleForm').addEventListener('submit', addVehicle);
+    document.getElementById('driverForm').addEventListener('submit', addDriver);
+    document.getElementById('seedBtn').addEventListener('click', seedSampleData);
+    document.getElementById('resetBtn').addEventListener('click', resetAllData);
+    document.getElementById('requestFormReset').addEventListener('click', () => document.getElementById('requestForm').reset());
+    document.getElementById('exportExcelBtn').addEventListener('click', exportSummaryToExcel);
+    document.getElementById('printReportBtn').addEventListener('click', () => window.print());
+
+    bootstrap();
+  </script>
+
+</body>
+</html>
